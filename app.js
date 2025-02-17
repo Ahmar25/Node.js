@@ -12,7 +12,9 @@ const server = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/plain');
 
   // Sending a response message
-  res.end('Hello, World!\n');
+  res.end('Hello, World!\n' +
+          'How are you doing?\n' +
+          'This is my Node.js app\n');
 });
 
 // Starting the server
