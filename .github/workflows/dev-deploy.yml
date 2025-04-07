@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy to EC2 (Dev)
         run: |
-          ssh -o StrictHostKeyChecking=no -i dev_key.pem ec2-user@${{ secrets.EC2_DEV_HOST }} << 'EOF'
+          ssh -i "Ahmar-key.pem" ubuntu@ec2-13-218-235-108.compute-1.amazonaws.com << 'EOF'
             cd nodejs-app  # Navigate to your app folder
             git pull origin main  # Pull latest code from GitHub
             npm install  # Install any new dependencies
