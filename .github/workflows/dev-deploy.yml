@@ -1,0 +1,28 @@
+name: Deploy to Dev EC2
+
+on:
+  push:
+    branches:
+      - main  # Run when pushing to main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3  # Check out the code from the repo
+
+      - name: Setup SSH key
+        run: |
+          echo "${{ secrets.EC2_DEV_KEY }}" > dev_key.pem  # Use EC2_DEV_KEY from GitHub secrets
+          chmod 600 dev_key.pem  # Secure the SSH key
+
+      - name: Deploy to EC2 (Dev)
+        run: |
+          ssh -o StrictHostKeyChecking=no -i dev_key.pem ec2-user@${{ secrets.EC2_DEV_HOST }} << 'EOF'
+            cd nodejs-app  # Navigate to your app folder
+            git pull origin main  # Pull latest code from GitHub
+            npm install  # Install any new dependencies
+            pm2 restart dev-app || pm2 start app.js --name dev-app  # Restart app with PM2
+          EOF
